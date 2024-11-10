@@ -3,7 +3,7 @@ package org.jonas.enterpriseproject.user.model.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table("users")
+@Table(name = "users")
 public class CustomUser {
 
     @Id
