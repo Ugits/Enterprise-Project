@@ -14,16 +14,16 @@ public enum UserRole {
     USER(GET, POST),
     ADMIN(GET, POST, DELETE);
 
-    private final List<String> permission;
+    private final List<String> permissions;
 
     UserRole(UserPermission... permissionList) {
-        this.permission = Arrays.stream(permissionList)
+        this.permissions = Arrays.stream(permissionList)
                 .map(UserPermission::getPermission)
                 .toList();
     }
 
-    public List<String> getListOfPermissions() {
-        return permission;
+    public List<String> getPermissions() {
+        return permissions;
     }
 
     public List<SimpleGrantedAuthority> getAuthorities() {
@@ -31,7 +31,7 @@ public enum UserRole {
         List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
 
         simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        simpleGrantedAuthorityList.addAll(getListOfPermissions().stream().map(SimpleGrantedAuthority::new)
+        simpleGrantedAuthorityList.addAll(getPermissions().stream().map(SimpleGrantedAuthority::new)
                 .toList());
 
         return simpleGrantedAuthorityList;
