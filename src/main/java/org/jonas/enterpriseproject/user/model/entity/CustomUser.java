@@ -24,12 +24,17 @@ public class CustomUser {
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
 
-    public CustomUser(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public CustomUser() {
     }
 
-    public CustomUser() {
+    public CustomUser(String username, String password, UserRole userRole, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled) {
+        this.username = username;
+        this.password = password;
+        this.userRole = userRole;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.isEnabled = isEnabled;
     }
 
     public List<SimpleGrantedAuthority> getAuthorities() {
@@ -95,5 +100,18 @@ public class CustomUser {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "isEnabled=" + isEnabled +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", isAccountNonExpired=" + isAccountNonExpired +
+                ", userRole=" + userRole +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }
