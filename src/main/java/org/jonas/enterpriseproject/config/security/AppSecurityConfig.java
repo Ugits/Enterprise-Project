@@ -34,16 +34,14 @@ public class AppSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login","/dev/**").permitAll()
-                        .requestMatchers("/user").hasRole(UserRole.USER.name())
-                        .requestMatchers("/admin").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers("/userpage").hasRole(UserRole.USER.name())
+                        .requestMatchers("/adminpage").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
-                        .permitAll()
                 )
-                // Register the AuthenticationProvider
                 .authenticationProvider(authenticationProvider());
 
         return http.build();
