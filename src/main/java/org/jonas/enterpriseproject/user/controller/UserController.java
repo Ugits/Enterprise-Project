@@ -1,14 +1,16 @@
 package org.jonas.enterpriseproject.user.controller;
 
-import org.jonas.enterpriseproject.user.repository.UserRepository;
+import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
+
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -18,5 +20,15 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<CustomUserDTO> register(@RequestBody @Validated CustomUserDTO customUserDTO) {
+        System.out.println("ENTER POSTMAPPING /REGISTER");
+        return userService.createUser(customUserDTO);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "works";
+    }
 
 }
