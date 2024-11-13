@@ -1,5 +1,6 @@
 package org.jonas.enterpriseproject.user.controller;
 
+import jakarta.validation.Valid;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 
 import org.jonas.enterpriseproject.user.service.UserService;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CustomUserDTO> register(@RequestBody @Validated CustomUserDTO customUserDTO) {
+    public ResponseEntity<CustomUserDTO> register(@RequestBody @Valid CustomUserDTO customUserDTO) {
         System.out.println("ENTER POSTMAPPING /REGISTER");
         return userService.createUser(customUserDTO);
     }
