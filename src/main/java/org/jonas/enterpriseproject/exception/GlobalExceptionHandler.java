@@ -35,10 +35,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                e.getMessage(),
+                ex.getMessage(),
                 LocalDateTime.now().toString()
         );
         return ResponseEntity
@@ -47,10 +47,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingPathVariableException.class)
-    public ResponseEntity<ErrorResponse> handleMissingPathVariableException(MissingPathVariableException e) {
+    public ResponseEntity<ErrorResponse> handleMissingPathVariableException(MissingPathVariableException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                e.getMessage() + " ",
+                ex.getMessage() + " ",
                 LocalDateTime.now().toString()
         );
         return ResponseEntity
@@ -59,10 +59,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred: " + e.getMessage(),
+                "An unexpected error occurred: " + ex.getMessage(),
                 LocalDateTime.now().toString()
         );
         return ResponseEntity
