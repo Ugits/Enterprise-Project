@@ -9,5 +9,8 @@ public interface UserDAO {
     void delete(CustomUser user);
     Optional<CustomUser> findById(Long id);
     Optional<CustomUser> findByUsername(String username);
-    boolean existsByUsername(String username);
+    //boolean existsByUsername(String username);
+    void test(CustomUser user);
 }
+
+// QUALIFYER

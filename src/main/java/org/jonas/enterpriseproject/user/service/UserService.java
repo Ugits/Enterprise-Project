@@ -1,5 +1,6 @@
 package org.jonas.enterpriseproject.user.service;
 
+import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
@@ -15,13 +16,14 @@ import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserDAO userDAO;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserService(PasswordEncoder passwordEncoder, UserDAO userDAO) {
         this.passwordEncoder = passwordEncoder;
+        this.userDAO = userDAO;
     }
 
     @Transactional
@@ -37,11 +39,11 @@ public class UserService {
                 true
         );
 
-        if (userRepository.findByUsername(customUser.getUsername()).isPresent()) {
+        if (userDAO.findByUsername(customUser.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        userRepository.save(customUser);
+        userDAO.save(customUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(customUserDTO);
 
     }
