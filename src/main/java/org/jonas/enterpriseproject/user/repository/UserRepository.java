@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<CustomUser, Long>, UserDAO {
-    // Add custom query´s that all DAOs use, in here
+    // Add custom query´s that all DAOs use, in here (IF GENERIC DAO)
 
 }
