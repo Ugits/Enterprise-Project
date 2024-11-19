@@ -12,4 +12,7 @@ public record CustomUserDTO(
         @Size(min = 7, max = 30, message = "Password size bust be between 7 and 30 characters")
         String password
 ) {
+        public CustomUserDTO(String username) {
+                this(username, "");
+        }
 }
