@@ -1,7 +1,8 @@
 package org.jonas.enterpriseproject.user.service;
 
-import org.jonas.enterpriseproject.authentication.dto.AuthenticationRequest;
-import org.jonas.enterpriseproject.authentication.jwt.JWTService;
+import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
+import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
+import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
@@ -76,20 +77,22 @@ public class UserService {
     }
 
 
-    public String verify(AuthenticationRequest authenticationRequest) {
-        Authentication authentication =
+    public AuthenticationResponse verify(AuthenticationRequest authenticationRequest) {
+        // Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 authenticationRequest.username(),
                                 authenticationRequest.password()
                         ));
 
-        if (authentication.isAuthenticated()) {
-            String generatedToken = jwtService.genererateToken(authenticationRequest.username());
-            System.out.println("Generated token: " + generatedToken);
-            return generatedToken;
-        }
+        String generatedToken = jwtService.genererateToken(authenticationRequest.username());
+        System.out.println("Generated token: " + generatedToken);
 
-        return "Failure";
+        return new AuthenticationResponse(generatedToken);
+
+//        if (!authentication.isAuthenticated()) {
+//            System.out.println("Authentication failed, returning Failure");
+//            return "Failure";
+//        }
     }
 }

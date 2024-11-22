@@ -1,10 +1,8 @@
 package org.jonas.enterpriseproject.user.controller;
 
 import jakarta.validation.Valid;
-import org.jonas.enterpriseproject.authentication.dto.AuthenticationRequest;
-import org.jonas.enterpriseproject.config.security.CustomUserDetails;
+import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
-import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
 @RestController
 @RequestMapping("/user")
@@ -26,15 +22,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-
-    @PostMapping("/login")
-    public String login(@RequestBody AuthenticationRequest authenticationRequest) {
-
-        return userService.verify(authenticationRequest);
-    }
-
-
 
     @PostMapping("/register")
     public ResponseEntity<CustomUserDTO> register(@RequestBody @Valid CustomUserDTO customUserDTO) {

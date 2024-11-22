@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.authentication.jwt;
+package org.jonas.enterpriseproject.auth.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

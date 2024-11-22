@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.authentication;
+package org.jonas.enterpriseproject.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +15,9 @@ public class CorsConfig {
 
         // Allow requests from your frontend domain
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
         configuration.addAllowedHeader("*"); // Allow all headers
+        configuration.setAllowCredentials(true);
         // Expose cookies here
 
         // Apply the configuration to all endpoints

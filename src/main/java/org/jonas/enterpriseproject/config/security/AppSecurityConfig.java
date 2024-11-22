@@ -1,6 +1,6 @@
 package org.jonas.enterpriseproject.config.security;
 
-import org.jonas.enterpriseproject.authentication.jwt.JwtFilter;
+import org.jonas.enterpriseproject.auth.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +47,7 @@ public class AppSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login","/dev/**", "/user/**" ).permitAll()
+                        .requestMatchers("/", "/login","/auth/**", "/user/**" ).permitAll()
                         //.requestMatchers(HttpMethod.POST,"/user/register").permitAll()
                         // GET POST METHOD TO WORK
                         // DO WE HAVE TO AUTHENTICATE?

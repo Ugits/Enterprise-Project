@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.authentication.dto;
+package org.jonas.enterpriseproject.auth.dto;
 
 public record AuthenticationRequest(
         String username,
