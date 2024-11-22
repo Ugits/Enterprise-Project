@@ -1,13 +1,16 @@
 package org.jonas.enterpriseproject.user.service;
 
+import org.jonas.enterpriseproject.authentication.dto.AuthenticationRequest;
+import org.jonas.enterpriseproject.authentication.jwt.JWTService;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,12 +26,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager, JWTService jwtService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -67,5 +73,23 @@ public class UserService {
         userRepository.delete(customUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CustomUserDTO(customUser.getUsername()));
 
+    }
+
+
+    public String verify(AuthenticationRequest authenticationRequest) {
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                authenticationRequest.username(),
+                                authenticationRequest.password()
+                        ));
+
+        if (authentication.isAuthenticated()) {
+            String generatedToken = jwtService.genererateToken(authenticationRequest.username());
+            System.out.println("Generated token: " + generatedToken);
+            return generatedToken;
+        }
+
+        return "Failure";
     }
 }

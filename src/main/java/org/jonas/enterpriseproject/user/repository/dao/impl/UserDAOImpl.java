@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import org.jonas.enterpriseproject.user.repository.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ public class UserDAOImpl implements UserDAO {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Optional<CustomUser> findByUsername(String username) {
         String query = "SELECT u FROM CustomUser u WHERE u.username = :username";
         return entityManager.createQuery(query, CustomUser.class)
