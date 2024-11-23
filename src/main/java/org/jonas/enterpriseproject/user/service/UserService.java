@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -85,7 +84,7 @@ public class UserService {
                                 authenticationRequest.password()
                         ));
 
-        String generatedToken = jwtService.genererateToken(authenticationRequest.username());
+        String generatedToken = jwtService.generateToken(authenticationRequest.username());
         System.out.println("Generated token: " + generatedToken);
 
         return new AuthenticationResponse(generatedToken);

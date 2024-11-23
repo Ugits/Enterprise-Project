@@ -1,15 +1,16 @@
 package org.jonas.enterpriseproject.exception;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public record ErrorResponse(
         int statusCode,
         String message,
-        String timestamp,
+        OffsetDateTime timestamp,
         List<ValidationError> errors
 ) {
 
-    public ErrorResponse(int statusCode, String message, String timestamp) {
+    public ErrorResponse(int statusCode, String message, OffsetDateTime timestamp) {
         this(statusCode, message, timestamp, List.of());
     }
 

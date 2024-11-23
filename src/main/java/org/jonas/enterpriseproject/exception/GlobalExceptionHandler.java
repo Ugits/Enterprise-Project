@@ -9,6 +9,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestControllerAdvice
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed for one or more fields.",
-                LocalDateTime.now().toString(),
+                OffsetDateTime.now(),
                 validationErrors
         );
         return ResponseEntity
@@ -41,7 +42,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now().toString()
+                OffsetDateTime.now()
         );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -53,7 +54,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage() + " ",
-                LocalDateTime.now().toString()
+                OffsetDateTime.now()
         );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -66,7 +67,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
-                LocalDateTime.now().toString()
+                OffsetDateTime.now()
         );
 
         return ResponseEntity
@@ -81,7 +82,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Invalid username or password",
-                LocalDateTime.now().toString()
+                OffsetDateTime.now()
         );
 
         return ResponseEntity
@@ -95,7 +96,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred: " + ex.getMessage(),
-                LocalDateTime.now().toString()
+                OffsetDateTime.now()
         );
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

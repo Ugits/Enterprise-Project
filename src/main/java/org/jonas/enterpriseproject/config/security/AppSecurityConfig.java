@@ -1,6 +1,8 @@
 package org.jonas.enterpriseproject.config.security;
 
 import org.jonas.enterpriseproject.auth.jwt.JwtFilter;
+import org.jonas.enterpriseproject.auth.jwt.RestAccessDeniedHandler;
+import org.jonas.enterpriseproject.auth.jwt.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,42 +29,62 @@ public class AppSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtFilter jwtFilter;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Autowired
-    public AppSecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService, CorsConfigurationSource corsConfigurationSource, JwtFilter jwtFilter) {
+    public AppSecurityConfig(PasswordEncoder passwordEncoder,
+                             CustomUserDetailsService customUserDetailsService,
+                             CorsConfigurationSource corsConfigurationSource,
+                             JwtFilter jwtFilter,
+                             RestAuthenticationEntryPoint restAuthenticationEntryPoint,
+                             RestAccessDeniedHandler restAccessDeniedHandler) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailsService = customUserDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
-
         this.jwtFilter = jwtFilter;
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+        this.restAccessDeniedHandler = restAccessDeniedHandler;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                // Enable CORS with the specified configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
+
+                // Disable CSRF as we're using JWTs
                 .csrf(AbstractHttpConfigurer::disable)
+
+                // Set session management to stateless
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
+                // Define authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login","/auth/**", "/user/**" ).permitAll()
-                        //.requestMatchers(HttpMethod.POST,"/user/register").permitAll()
-                        // GET POST METHOD TO WORK
-                        // DO WE HAVE TO AUTHENTICATE?
-                        // CAN WE PERMIT ALL ON A CONTOLLER AND ALL INCLUDING ENDPOINTS?
-                        //.requestMatchers("/userpage").hasRole(UserRole.USER.name())
-                        //.requestMatchers("/adminpage").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers("/", "/login", "/auth/**").permitAll()
+                        .requestMatchers("/user/**").authenticated()
                         .anyRequest().authenticated()
                 )
+
+                // Configure exception handling
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .accessDeniedHandler(restAccessDeniedHandler)
+                )
+
+                // Add JWT filter before the UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//                .httpBasic(Customizer.withDefaults())
-                .formLogin(withDefaults())
+
+                // Set the authentication provider
+                .authenticationProvider(authenticationProvider())
+
+                // Configure logout behavior
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
-                )
-                .authenticationProvider(authenticationProvider());
+                );
 
         return http.build();
     }
