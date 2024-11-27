@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
@@ -79,8 +82,8 @@ public class UserService {
 
 
     public AuthenticationResponse verify(AuthenticationRequest authenticationRequest) {
-        // Authentication authentication =
-        authenticationManager.authenticate(
+        Authentication authentication =
+                authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.username(),
                         authenticationRequest.password()
@@ -89,7 +92,17 @@ public class UserService {
         String generatedToken = jwtService.generateToken(authenticationRequest.username());
         System.out.println("Generated token: " + generatedToken);
 
-        return new AuthenticationResponse(generatedToken);
+        Optional<String> optionalRole = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .findFirst();
+
+        String role = optionalRole.orElse("UNKNOWN");
+
+        System.out.println("in verify: " + role.substring(5));
+
+
+        return new AuthenticationResponse(generatedToken, role.substring(5));
 
 //        if (!authentication.isAuthenticated()) {
 //            System.out.println("Authentication failed, returning Failure");
