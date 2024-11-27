@@ -5,6 +5,7 @@ import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
+import org.jonas.enterpriseproject.user.repository.UserRepositoryCustom;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,18 @@ import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
+    private final UserRepositoryCustom userRepositoryCustom;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager, JWTService jwtService) {
+    public UserService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService, UserRepository userRepository, UserRepositoryCustom userRepositoryCustom) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userRepositoryCustom = userRepositoryCustom;
     }
 
     @Transactional
@@ -50,11 +52,11 @@ public class UserService {
                 true
         );
 
-        if (userRepository.findByUsername(customUser.getUsername()).isPresent()) {
+        if (userRepositoryCustom.findByUsername(customUser.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        userRepository.save(customUser);
+        userRepositoryCustom.save(customUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(customUserDTO);
 
     }
@@ -66,11 +68,11 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        CustomUser customUser = userRepository
+        CustomUser customUser = userRepositoryCustom
                 .findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername() + " not found"));
 
-        userRepository.delete(customUser);
+        userRepositoryCustom.delete(customUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CustomUserDTO(customUser.getUsername()));
 
     }
@@ -78,11 +80,11 @@ public class UserService {
 
     public AuthenticationResponse verify(AuthenticationRequest authenticationRequest) {
         // Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                authenticationRequest.username(),
-                                authenticationRequest.password()
-                        ));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.username(),
+                        authenticationRequest.password()
+                ));
 
         String generatedToken = jwtService.generateToken(authenticationRequest.username());
         System.out.println("Generated token: " + generatedToken);

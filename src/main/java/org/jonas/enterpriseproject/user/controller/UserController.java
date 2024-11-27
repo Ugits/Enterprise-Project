@@ -38,17 +38,16 @@ public class UserController {
 
         }
 
-            // Map UserDetails to UserDTO
-            CustomUserDTO customUserDTO = new CustomUserDTO(
-                    userDetails.getUsername(),
-                    userDetails.getPassword()
-            );
+        // Map UserDetails to UserDTO
+        CustomUserDTO customUserDTO = new CustomUserDTO(
+                userDetails.getUsername(),
+                userDetails.getPassword()
+        );
 
-            // Optional: Log non-sensitive information
-            System.out.println("Authenticated user: " + customUserDTO.username());
-            return ResponseEntity.ok(customUserDTO);
+        // Optional: Log non-sensitive information
+        System.out.println("Authenticated user: " + customUserDTO.username());
+        return ResponseEntity.ok(customUserDTO);
     }
-
 
 
     @DeleteMapping("/delete-me")

@@ -1,11 +1,9 @@
-package org.jonas.enterpriseproject.user.repository.dao.impl;
+package org.jonas.enterpriseproject.user.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.jonas.enterpriseproject.user.repository.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,9 +13,8 @@ public class UserDAOImpl implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    @Transactional
     public Optional<CustomUser> findByUsername(String username) {
+        System.out.println("Running UserDAO Custom Query");
         String query = "SELECT u FROM CustomUser u WHERE u.username = :username";
         return entityManager.createQuery(query, CustomUser.class)
                 .setParameter("username", username)
@@ -28,13 +25,9 @@ public class UserDAOImpl implements UserDAO {
 
     //
 //    @Override
-//    public void save(CustomUser user) {
+//    public CustomUser save(CustomUser user) {
 //        entityManager.persist(user);
-//    }
-//
-//    @Query
-//    public void test(CustomUser user) {
-//        entityManager.persist(user);
+//        return user;
 //    }
 //
 //    @Override
@@ -44,7 +37,7 @@ public class UserDAOImpl implements UserDAO {
 //
 //    @Override
 //    public void delete(CustomUser user) {
-//            entityManager.remove(user);
+//        entityManager.remove(user);
 //    }
 //
 //    @Override
@@ -52,7 +45,7 @@ public class UserDAOImpl implements UserDAO {
 //        CustomUser user = entityManager.find(CustomUser.class, id);
 //        return Optional.ofNullable(user);
 //    }
-//
+
 //    @Override
 //    public Optional<CustomUser> findByUsername(String username) {
 //        String jpql = "SELECT u FROM CustomUser u WHERE u.username = :username";
@@ -60,7 +53,7 @@ public class UserDAOImpl implements UserDAO {
 //        query.setParameter("username", username);
 //        return query.getResultStream().findFirst();
 //    }
-
+//}
 //    @Override
 //    public boolean existsByUsername(String username) {
 //        String jpql = "SELECT COUNT(u) FROM CustomUser u WHERE u.username = :username";

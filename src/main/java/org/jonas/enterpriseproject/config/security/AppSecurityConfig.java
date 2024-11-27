@@ -19,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfigurationSource;
 
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig {
@@ -64,7 +62,7 @@ public class AppSecurityConfig {
 
                 // Define authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/auth/**").permitAll()
+                        .requestMatchers("/", "/login", "/auth/**", "/dev/**").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .anyRequest().authenticated()
                 )
