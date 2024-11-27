@@ -19,9 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
@@ -92,17 +90,16 @@ public class UserService {
         String generatedToken = jwtService.generateToken(authenticationRequest.username());
         System.out.println("Generated token: " + generatedToken);
 
-        Optional<String> optionalRole = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(authority -> authority.startsWith("ROLE_"))
-                .findFirst();
-
-        String role = optionalRole.orElse("UNKNOWN");
-
-        System.out.println("in verify: " + role.substring(5));
-
-
-        return new AuthenticationResponse(generatedToken, role.substring(5));
+        return
+                new AuthenticationResponse(
+                        generatedToken,
+                        authentication.getAuthorities()
+                                .stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .filter(authority -> authority.startsWith("ROLE_"))
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalStateException("User has no role"))
+                                .substring(5));
 
 //        if (!authentication.isAuthenticated()) {
 //            System.out.println("Authentication failed, returning Failure");
