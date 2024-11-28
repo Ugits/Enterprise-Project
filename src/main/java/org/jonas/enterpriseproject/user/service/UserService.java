@@ -4,6 +4,7 @@ import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
+import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepositoryCustom;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,9 +103,22 @@ public class UserService {
                                 .orElseThrow(() -> new IllegalStateException("User has no role"))
                                 .substring(5));
 
-//        if (!authentication.isAuthenticated()) {
-//            System.out.println("Authentication failed, returning Failure");
-//            return "Failure";
-//        }
+    }
+
+    public UserCredentialsDTO extractCredentials(UserDetails userDetails) {
+
+        if (userDetails == null) throw new IllegalStateException("UserDetails is null");
+
+        return new UserCredentialsDTO(
+                userDetails.getUsername(),
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .filter(authority -> authority.startsWith("ROLE_"))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("User has no role"))
+                        .substring(5)
+        );
     }
 }

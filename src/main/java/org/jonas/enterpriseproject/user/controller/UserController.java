@@ -33,24 +33,7 @@ public class UserController {
 
     @GetMapping("/credentials")
     public ResponseEntity<UserCredentialsDTO> getCredentials(@AuthenticationPrincipal UserDetails userDetails) {
-
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok(
-                new UserCredentialsDTO(
-                        userDetails.getUsername(),
-                        userDetails.getPassword(),
-                        userDetails.getAuthorities()
-                                .stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .filter(authority -> authority.startsWith("ROLE_"))
-                                .findFirst()
-                                .orElseThrow(() -> new IllegalStateException("User has no role"))
-                                .substring(5)
-                )
-        );
+        return ResponseEntity.ok().body(userService.extractCredentials(userDetails));
     }
 
 

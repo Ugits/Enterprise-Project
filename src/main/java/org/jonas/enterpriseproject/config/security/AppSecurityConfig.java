@@ -49,18 +49,14 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // Enable CORS with the specified configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-                // Disable CSRF as we're using JWTs
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Set session management to stateless
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // Define authorization rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/auth/**", "/dev/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -68,19 +64,15 @@ public class AppSecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // Configure exception handling
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(restAuthenticationEntryPoint)
                         .accessDeniedHandler(restAccessDeniedHandler)
                 )
 
-                // Add JWT filter before the UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // Set the authentication provider
                 .authenticationProvider(authenticationProvider())
 
-                // Configure logout behavior
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                 );
