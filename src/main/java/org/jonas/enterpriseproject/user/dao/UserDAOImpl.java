@@ -15,7 +15,7 @@ public class UserDAOImpl implements UserDAO {
 
     public Optional<CustomUser> findByUsername(String username) {
         System.out.println("Running UserDAO Custom Query");
-        String query = "SELECT u FROM CustomUser u WHERE u.username = :username";
+        String query = "SELECT u FROM CustomUser u WHERE LOWER(u.username) = LOWER(:username) ";
         return entityManager.createQuery(query, CustomUser.class)
                 .setParameter("username", username)
                 .getResultStream()

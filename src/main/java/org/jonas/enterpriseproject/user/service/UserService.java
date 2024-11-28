@@ -3,6 +3,7 @@ package org.jonas.enterpriseproject.user.service;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
+import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
@@ -55,8 +57,10 @@ public class UserService {
                 true
         );
 
-        if (userRepositoryCustom.findByUsername(customUser.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+
+        if (userRepositoryCustom.findByUsername(customUserDTO.username()).isPresent()) {
+            throw new UserAlreadyExistsException("A user with username " + customUserDTO.username() + " already exists");
         }
 
         userRepositoryCustom.save(customUser);
