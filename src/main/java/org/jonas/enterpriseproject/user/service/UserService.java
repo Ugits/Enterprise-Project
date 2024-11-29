@@ -57,10 +57,8 @@ public class UserService {
                 true
         );
 
-
-
-        if (userRepositoryCustom.findByUsername(customUserDTO.username()).isPresent()) {
-            throw new UserAlreadyExistsException("A user with username " + customUserDTO.username() + " already exists");
+        if (userRepositoryCustom.findByUsernameIgnoreCase(customUserDTO.username()).isPresent()) {
+            throw new UserAlreadyExistsException("Username " + customUserDTO.username() + " is already taken");
         }
 
         userRepositoryCustom.save(customUser);

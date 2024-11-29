@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UserDAO {
     Optional<CustomUser> findByUsername(String username);
+    Optional<CustomUser> findByUsernameIgnoreCase(String username);
 }
 
 // QUALIFYER

@@ -21,4 +21,14 @@ public class UserRepositoryCustomImpl implements UserDAO {
                 .getResultStream()
                 .findFirst();
     }
+
+    @Override
+    public Optional<CustomUser> findByUsernameIgnoreCase(String username) {
+        System.out.println("Running UserDAO Custom Query");
+        String query = "SELECT u FROM CustomUser u WHERE LOWER(u.username) = LOWER(:username) ";
+        return entityManager.createQuery(query, CustomUser.class)
+                .setParameter("username", username)
+                .getResultStream()
+                .findFirst();
+    }
 }
