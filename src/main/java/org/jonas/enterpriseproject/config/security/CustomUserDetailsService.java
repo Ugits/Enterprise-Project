@@ -1,7 +1,7 @@
 package org.jonas.enterpriseproject.config.security;
 
+import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
-import org.jonas.enterpriseproject.user.repository.UserRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,19 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepositoryCustom userRepositoryCustom;
+    private final UserDAO userDAO;
 
     @Autowired
-    public CustomUserDetailsService(UserRepositoryCustom userRepositoryCustom) {
-        this.userRepositoryCustom = userRepositoryCustom;
-
+    public CustomUserDetailsService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
+
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        CustomUser customUser = userRepositoryCustom
+        CustomUser customUser = userDAO
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 

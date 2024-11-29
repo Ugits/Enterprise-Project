@@ -2,6 +2,7 @@ package org.jonas.enterpriseproject.auth.controller;
 
 import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
+import org.jonas.enterpriseproject.auth.service.AuthService;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @Autowired
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return ResponseEntity.ok(userService.verify(authenticationRequest));
+        return ResponseEntity.ok(authService.verify(authenticationRequest));
     }
+
 
 
 }

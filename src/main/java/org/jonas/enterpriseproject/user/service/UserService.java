@@ -1,13 +1,15 @@
 package org.jonas.enterpriseproject.user.service;
 
+import jakarta.validation.Valid;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
+import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
+import org.jonas.enterpriseproject.user.model.dto.CustomUserDTODEV;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
-import org.jonas.enterpriseproject.user.repository.UserRepositoryCustom;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,55 +18,30 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
 @Service
 public class UserService {
 
-
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JWTService jwtService;
-    private final UserRepositoryCustom userRepositoryCustom;
+    private final UserDAO userDAO;
+    private final UserRepository userRepository;
+
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService, UserRepository userRepository, UserRepositoryCustom userRepositoryCustom) {
+    public UserService(PasswordEncoder passwordEncoder, UserDAO userDAO, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-        this.userRepositoryCustom = userRepositoryCustom;
+        this.userDAO = userDAO;
+        this.userRepository = userRepository;
     }
 
-    @Transactional
-    public ResponseEntity<CustomUserDTO> createUser(CustomUserDTO customUserDTO) {
-
-        CustomUser customUser = new CustomUser(
-                customUserDTO.username(),
-                passwordEncoder.encode(customUserDTO.password()),
-                USER,
-                true,
-                true,
-                true,
-                true
-        );
-
-        if (userRepositoryCustom.findByUsernameIgnoreCase(customUserDTO.username()).isPresent()) {
-            throw new UserAlreadyExistsException("Username " + customUserDTO.username() + " is already taken");
-        }
-
-        userRepositoryCustom.save(customUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(customUserDTO);
-
-    }
 
     @Transactional
     public ResponseEntity<CustomUserDTO> deleteAuthenticatedUser(UserDetails userDetails) {
@@ -73,39 +50,15 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        CustomUser customUser = userRepositoryCustom
+        CustomUser customUser = userDAO
                 .findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername() + " not found"));
 
-        userRepositoryCustom.delete(customUser);
+        userRepository.delete(customUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CustomUserDTO(customUser.getUsername()));
 
     }
 
-
-    public AuthenticationResponse verify(AuthenticationRequest authenticationRequest) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.username(),
-                        authenticationRequest.password()
-                ));
-
-        String generatedToken = jwtService.generateToken(authenticationRequest.username());
-        System.out.println("Generated token: " + generatedToken);
-
-        return
-                new AuthenticationResponse(
-                        generatedToken,
-                        authentication.getAuthorities()
-                                .stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .filter(authority -> authority.startsWith("ROLE_"))
-                                .findFirst()
-                                .orElseThrow(() -> new IllegalStateException("User has no role"))
-                                .substring(5));
-
-    }
 
     public UserCredentialsDTO extractCredentials(UserDetails userDetails) {
 
@@ -123,4 +76,49 @@ public class UserService {
                         .substring(5)
         );
     }
+
+    @Transactional
+    public ResponseEntity<CustomUserDTO> createUser(CustomUserDTO customUserDTO) {
+
+        CustomUser customUser = new CustomUser(
+                customUserDTO.username(),
+                passwordEncoder.encode(customUserDTO.password()),
+                USER,
+                true,
+                true,
+                true,
+                true
+        );
+
+        if (userDAO.findByUsernameIgnoreCase(customUser.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("Username " + customUserDTO.username() + " is already taken");
+        }
+
+        userRepository.save(customUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(customUserDTO);
+
+    }
+
+    @Transactional
+    public ResponseEntity<CustomUserDTO> createUserDEV(CustomUserDTODEV customUserDTODEV) {
+
+        CustomUser customUser = new CustomUser(
+                customUserDTODEV.username(),
+                passwordEncoder.encode(customUserDTODEV.password()),
+                customUserDTODEV.role(),
+                true,
+                true,
+                true,
+                true
+        );
+
+        if (userDAO.findByUsernameIgnoreCase(customUserDTODEV.username()).isPresent()) {
+            throw new UserAlreadyExistsException("Username " + customUserDTODEV.username() + " is already taken");
+        }
+
+        userRepository.save(customUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomUserDTO(customUser.getUsername(), customUser.getPassword()));
+
+    }
+
 }

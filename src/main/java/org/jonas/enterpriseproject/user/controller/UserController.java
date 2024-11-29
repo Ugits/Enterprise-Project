@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -27,7 +26,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<CustomUserDTO> register(@RequestBody @Valid CustomUserDTO customUserDTO) {
-        System.out.println("ENTER POST MAPPING / REGISTER");
         return userService.createUser(customUserDTO);
     }
 
