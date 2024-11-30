@@ -5,9 +5,11 @@ import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
+import org.jonas.enterpriseproject.user.authorities.UserRole;
 import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTODEV;
+import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
@@ -78,12 +80,12 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<CustomUserDTO> createUser(CustomUserDTO customUserDTO) {
+    public ResponseEntity<UserCredentialsDTO> createUser(SignupRequestDTO signupRequestDTO) {
 
         CustomUser customUser = new CustomUser(
-                customUserDTO.username(),
-                passwordEncoder.encode(customUserDTO.password()),
-                USER,
+                signupRequestDTO.username(),
+                passwordEncoder.encode(signupRequestDTO.password()),
+                UserRole.valueOf(signupRequestDTO.role()),
                 true,
                 true,
                 true,
@@ -91,34 +93,34 @@ public class UserService {
         );
 
         if (userDAO.findByUsernameIgnoreCase(customUser.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException("Username " + customUserDTO.username() + " is already taken");
+            throw new UserAlreadyExistsException("Username " + signupRequestDTO.username() + " is already taken");
         }
 
         userRepository.save(customUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(customUserDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserCredentialsDTO(customUser.getUsername(),customUser.getPassword(),customUser.getUserRole().name()));
 
     }
 
-    @Transactional
-    public ResponseEntity<CustomUserDTO> createUserDEV(CustomUserDTODEV customUserDTODEV) {
-
-        CustomUser customUser = new CustomUser(
-                customUserDTODEV.username(),
-                passwordEncoder.encode(customUserDTODEV.password()),
-                customUserDTODEV.role(),
-                true,
-                true,
-                true,
-                true
-        );
-
-        if (userDAO.findByUsernameIgnoreCase(customUserDTODEV.username()).isPresent()) {
-            throw new UserAlreadyExistsException("Username " + customUserDTODEV.username() + " is already taken");
-        }
-
-        userRepository.save(customUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomUserDTO(customUser.getUsername(), customUser.getPassword()));
-
-    }
+//    @Transactional
+//    public ResponseEntity<CustomUserDTO> createUserDEV(CustomUserDTODEV customUserDTODEV) {
+//
+//        CustomUser customUser = new CustomUser(
+//                customUserDTODEV.username(),
+//                passwordEncoder.encode(customUserDTODEV.password()),
+//                customUserDTODEV.role(),
+//                true,
+//                true,
+//                true,
+//                true
+//        );
+//
+//        if (userDAO.findByUsernameIgnoreCase(customUserDTODEV.username()).isPresent()) {
+//            throw new UserAlreadyExistsException("Username " + customUserDTODEV.username() + " is already taken");
+//        }
+//
+//        userRepository.save(customUser);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomUserDTO(customUser.getUsername(), customUser.getPassword()));
+//
+//    }
 
 }

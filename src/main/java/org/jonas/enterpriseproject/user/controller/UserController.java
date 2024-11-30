@@ -2,6 +2,7 @@ package org.jonas.enterpriseproject.user.controller;
 
 import jakarta.validation.Valid;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
+import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<CustomUserDTO> signup(@RequestBody @Valid CustomUserDTO customUserDTO) {
-        return userService.createUser(customUserDTO);
+    public ResponseEntity<UserCredentialsDTO> signup(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
+        return userService.createUser(signupRequestDTO);
     }
 
     @GetMapping("/credentials")
