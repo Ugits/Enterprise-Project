@@ -1,14 +1,11 @@
 package org.jonas.enterpriseproject.user.controller;
 
 import jakarta.validation.Valid;
-import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +21,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<CustomUserDTO> register(@RequestBody @Valid CustomUserDTO customUserDTO) {
+    @PostMapping("/signup")
+    public ResponseEntity<CustomUserDTO> signup(@RequestBody @Valid CustomUserDTO customUserDTO) {
         return userService.createUser(customUserDTO);
     }
 
@@ -34,10 +31,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.extractCredentials(userDetails));
     }
 
-
-    @DeleteMapping("/delete-me")
-    public ResponseEntity<CustomUserDTO> deleteLoggedInUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.deleteAuthenticatedUser(userDetails);
-    }
+//    @DeleteMapping("/delete-me")
+//    public ResponseEntity<CustomUserDTO> deleteLoggedInUser(@AuthenticationPrincipal UserDetails userDetails) {
+//        return userService.deleteAuthenticatedUser(userDetails);
+//    }
 
 }
