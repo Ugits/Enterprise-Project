@@ -1,14 +1,9 @@
 package org.jonas.enterpriseproject.user.service;
 
-import jakarta.validation.Valid;
-import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
-import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
-import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
 import org.jonas.enterpriseproject.user.authorities.UserRole;
 import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
-import org.jonas.enterpriseproject.user.model.dto.CustomUserDTODEV;
 import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
@@ -16,9 +11,6 @@ import org.jonas.enterpriseproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
-
-import static org.jonas.enterpriseproject.user.authorities.UserRole.USER;
 
 @Service
 public class UserService {

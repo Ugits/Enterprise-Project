@@ -15,6 +15,7 @@ public class ApiWebClient {
     public WebClient.Builder webClientBuilder() {
         return WebClient
                 .builder()
+                .defaultHeader("Content-Type", "application/json")
                 .baseUrl(apiUrl);
     }
 
