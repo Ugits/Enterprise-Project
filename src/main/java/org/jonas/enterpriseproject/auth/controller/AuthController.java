@@ -1,8 +1,11 @@
 package org.jonas.enterpriseproject.auth.controller;
 
+import jakarta.validation.Valid;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationRequest;
 import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.service.AuthService;
+import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
+import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authService.verify(authenticationRequest));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserCredentialsDTO> register(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
+        return authService.createUser(signupRequestDTO);
     }
 
 

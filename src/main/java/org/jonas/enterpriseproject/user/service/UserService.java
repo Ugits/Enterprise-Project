@@ -69,27 +69,7 @@ public class UserService {
         );
     }
 
-    @Transactional
-    public ResponseEntity<UserCredentialsDTO> createUser(SignupRequestDTO signupRequestDTO) {
 
-        CustomUser customUser = new CustomUser(
-                signupRequestDTO.username(),
-                passwordEncoder.encode(signupRequestDTO.password()),
-                UserRole.valueOf(signupRequestDTO.role()),
-                true,
-                true,
-                true,
-                true
-        );
-
-        if (userDAO.findByUsernameIgnoreCase(customUser.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException("Username " + signupRequestDTO.username() + " is already taken");
-        }
-
-        userRepository.save(customUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserCredentialsDTO(customUser.getUsername(),customUser.getPassword(),customUser.getUserRole().name()));
-
-    }
 
 //    @Transactional
 //    public ResponseEntity<CustomUserDTO> createUserDEV(CustomUserDTODEV customUserDTODEV) {

@@ -7,7 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EnterpriseProjectApplication {
 
     public static void main(String[] args) {
+
+
         SpringApplication.run(EnterpriseProjectApplication.class, args);
+
+
     }
 
 }

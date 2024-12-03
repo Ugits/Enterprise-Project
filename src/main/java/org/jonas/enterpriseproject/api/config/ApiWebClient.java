@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class ApiWebClient {
 
-    @Value("${API_URL}")
+    @Value("${SPELLIFY_API_URL}")
     private String apiUrl;
 
     @Bean

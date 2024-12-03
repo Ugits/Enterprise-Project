@@ -22,19 +22,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<UserCredentialsDTO> signup(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
-        return userService.createUser(signupRequestDTO);
-    }
-
     @GetMapping("/credentials")
     public ResponseEntity<UserCredentialsDTO> getCredentials(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok().body(userService.extractCredentials(userDetails));
     }
 
-//    @DeleteMapping("/delete-me")
-//    public ResponseEntity<CustomUserDTO> deleteLoggedInUser(@AuthenticationPrincipal UserDetails userDetails) {
-//        return userService.deleteAuthenticatedUser(userDetails);
-//    }
 
 }

@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.exception.dto;
+package org.jonas.enterpriseproject.api.dto;
 
 public record ErrorResponseDTO(
         int statusCode,

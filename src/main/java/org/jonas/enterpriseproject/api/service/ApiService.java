@@ -1,13 +1,12 @@
 package org.jonas.enterpriseproject.api.service;
 
 import org.jonas.enterpriseproject.exception.WebServiceException;
-import org.jonas.enterpriseproject.exception.dto.ErrorResponseDTO;
+import org.jonas.enterpriseproject.api.dto.ErrorResponseDTO;
 import org.jonas.enterpriseproject.spell.model.SpellDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
