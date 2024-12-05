@@ -33,20 +33,14 @@ public class ApiController {
 
     @GetMapping("/all-spells")
     public Mono<ResponseEntity<List<SpellDTO>>> getAllSpells(Authentication authentication) {
-
         if (authentication != null && authentication.isAuthenticated()) {
-            System.out.println("Auth " + authentication.getName() + "fetch");
             return apiService.fetchAllSpells()
                     .map(spellList -> ResponseEntity.ok()
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(spellList));
-
+        } else {
+            return Mono.just(ResponseEntity.badRequest().build());
         }
-
-        return apiService.fetchUnAuthSample()
-                .map(spellList -> ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(spellList));
 
     }
 
@@ -56,14 +50,12 @@ public class ApiController {
         return ResponseEntity.ok().body("hi there");
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test(Authentication authentication) {
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            return ResponseEntity.ok().body("HI AUTH USER");
-        }
-
-        return ResponseEntity.ok().body("HI ANONYMOUS USER (UNAUTHORIZED)");
+    @GetMapping("/sample")
+    public Mono<ResponseEntity<List<SpellDTO>>> sample() {
+        return apiService.fetchUnAuthSample()
+                .map(spellList -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(spellList));
     }
 
 }
