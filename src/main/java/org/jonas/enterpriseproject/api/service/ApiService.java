@@ -112,12 +112,6 @@ public class ApiService {
                 });
     }
 
-    /**
-     * Parses the timestamp string to OffsetDateTime.
-     *
-     * @param timestamp The timestamp string from external ErrorResponseDTO.
-     * @return Parsed OffsetDateTime object.
-     */
     private OffsetDateTime parseTimestamp(String timestamp) {
         try {
             return OffsetDateTime.parse(timestamp);

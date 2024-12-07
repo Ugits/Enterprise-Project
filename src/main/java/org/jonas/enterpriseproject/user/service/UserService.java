@@ -26,20 +26,15 @@ public class UserService {
 
     @Transactional
     public ResponseEntity<CustomUserDTO> deleteAuthenticatedUser(UserDetails userDetails) {
-
         if (Objects.isNull(userDetails)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         CustomUser customUser = userRepository
                 .findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername() + " not found"));
-
         userRepository.delete(customUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CustomUserDTO(customUser.getUsername()));
-
     }
-
 
     public UserCredentialsDTO extractCredentials(UserDetails userDetails) {
 
@@ -57,29 +52,4 @@ public class UserService {
                         .substring(5)
         );
     }
-
-
-
-//    @Transactional
-//    public ResponseEntity<CustomUserDTO> createUserDEV(CustomUserDTODEV customUserDTODEV) {
-//
-//        CustomUser customUser = new CustomUser(
-//                customUserDTODEV.username(),
-//                passwordEncoder.encode(customUserDTODEV.password()),
-//                customUserDTODEV.role(),
-//                true,
-//                true,
-//                true,
-//                true
-//        );
-//
-//        if (userDAO.findByUsernameIgnoreCase(customUserDTODEV.username()).isPresent()) {
-//            throw new UserAlreadyExistsException("Username " + customUserDTODEV.username() + " is already taken");
-//        }
-//
-//        userRepository.save(customUser);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomUserDTO(customUser.getUsername(), customUser.getPassword()));
-//
-//    }
-
 }

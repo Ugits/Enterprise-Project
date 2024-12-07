@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 public class AdminService {
 
@@ -20,11 +19,9 @@ public class AdminService {
 
     @Transactional
     public void deleteUser(String username) {
-
         CustomUser customUser = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
-
         userRepository.delete(customUser);
     }
 }

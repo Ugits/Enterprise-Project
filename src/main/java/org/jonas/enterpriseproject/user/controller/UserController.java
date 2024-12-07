@@ -1,8 +1,5 @@
 package org.jonas.enterpriseproject.user.controller;
 
-import jakarta.validation.Valid;
-import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
-import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,5 @@ public class UserController {
     public ResponseEntity<UserCredentialsDTO> getCredentials(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok().body(userService.extractCredentials(userDetails));
     }
-
 
 }

@@ -3,7 +3,6 @@ package org.jonas.enterpriseproject.config.security;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {

@@ -9,5 +9,4 @@ public interface UserDAO {
     Optional<CustomUser> findByUsernameIgnoreCase(String username);
 }
 
-// QUALIFYER
 

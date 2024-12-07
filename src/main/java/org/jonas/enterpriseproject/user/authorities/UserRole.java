@@ -1,11 +1,9 @@
 package org.jonas.enterpriseproject.user.authorities;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.jonas.enterpriseproject.user.authorities.UserPermission.*;
 
 public enum UserRole {

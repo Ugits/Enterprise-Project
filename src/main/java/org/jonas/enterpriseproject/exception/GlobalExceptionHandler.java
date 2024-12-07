@@ -11,20 +11,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
-
         List<ErrorResponse.ValidationError> validationErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -32,7 +28,6 @@ public class GlobalExceptionHandler {
                         fieldError.getField(),
                         fieldError.getDefaultMessage()))
                 .toList();
-
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed for one or more fields.",
@@ -80,7 +75,6 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    // Handle username not found
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -88,14 +82,12 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 OffsetDateTime.now()
         );
-
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
 
     }
 
-    // Handle bad credentials
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -103,11 +95,9 @@ public class GlobalExceptionHandler {
                 "Invalid username or password",
                 OffsetDateTime.now()
         );
-
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(errorResponse);
-
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

@@ -17,19 +17,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-
     }
-
 
     @Override
     @Transactional()
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         CustomUser customUser = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        System.out.println("LOADING USER TO SPRING... " + customUser);
         return new CustomUserDetails(customUser);
     }
 }

@@ -5,14 +5,12 @@ import org.jonas.enterpriseproject.spell.model.SpellDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
 import java.util.List;
 
 @RestController
@@ -27,10 +25,6 @@ public class ApiController {
         this.apiService = apiService;
     }
 
-
-    // TODO CHANGE NAME.. could it collide
-    // TODO will it make an anonymous 2nd request if /api has .permitAll ??
-
     @GetMapping("/all-spells")
     public Mono<ResponseEntity<List<SpellDTO>>> getAllSpells(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
@@ -42,12 +36,6 @@ public class ApiController {
             return Mono.just(ResponseEntity.badRequest().build());
         }
 
-    }
-
-    @GetMapping("/hi")
-    public ResponseEntity<String> hi() {
-        System.out.println("Enter hi in controller");
-        return ResponseEntity.ok().body("hi there");
     }
 
     @GetMapping("/sample")
