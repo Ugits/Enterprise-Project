@@ -1,5 +1,8 @@
 package org.jonas.enterpriseproject.user.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.jonas.enterpriseproject.user.model.dto.DeleteUserDTO;
 import org.jonas.enterpriseproject.user.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +20,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete-user")
-    public ResponseEntity<Void> deleteUser(@RequestParam String username) {
-        adminService.deleteUser(username);
+    public ResponseEntity<Void> deleteUser(@Valid @ModelAttribute DeleteUserDTO deleteUserDTO) {
+        System.out.println(deleteUserDTO.username());
+        adminService.deleteUser(deleteUserDTO.username());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

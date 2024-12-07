@@ -1,10 +1,6 @@
 package org.jonas.enterpriseproject.user.service;
 
-import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
-import org.jonas.enterpriseproject.user.authorities.UserRole;
-import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.CustomUserDTO;
-import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
 import org.jonas.enterpriseproject.user.repository.UserRepository;
@@ -14,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
@@ -22,18 +17,12 @@ import java.util.Objects;
 @Service
 public class UserService {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserDAO userDAO;
     private final UserRepository userRepository;
 
-
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserDAO userDAO, UserRepository userRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     @Transactional
     public ResponseEntity<CustomUserDTO> deleteAuthenticatedUser(UserDetails userDetails) {
@@ -42,7 +31,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        CustomUser customUser = userDAO
+        CustomUser customUser = userRepository
                 .findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername() + " not found"));
 

@@ -39,3 +39,6 @@ out/
 ### Custom ###
 src/main/resources/application.properties
 src/main/java/org/jonas/enterpriseproject/user/controller/DevController.java
+
+### Secrets ###
+*.sec.md

@@ -5,7 +5,6 @@ import org.jonas.enterpriseproject.auth.dto.AuthenticationResponse;
 import org.jonas.enterpriseproject.auth.jwt.JWTService;
 import org.jonas.enterpriseproject.exception.UserAlreadyExistsException;
 import org.jonas.enterpriseproject.user.authorities.UserRole;
-import org.jonas.enterpriseproject.user.dao.UserDAO;
 import org.jonas.enterpriseproject.user.model.dto.SignupRequestDTO;
 import org.jonas.enterpriseproject.user.model.dto.UserCredentialsDTO;
 import org.jonas.enterpriseproject.user.model.entity.CustomUser;
@@ -28,19 +27,19 @@ public class AuthService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserDAO userDAO;
+
 
     @Autowired
     public AuthService(AuthenticationManager authenticationManager,
                        JWTService jwtService,
                        PasswordEncoder passwordEncoder,
-                       UserRepository userRepository,
-                       UserDAO userDAO) {
+                       UserRepository userRepository
+                    ) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.userDAO = userDAO;
+
     }
 
     public AuthenticationResponse verify(AuthenticationRequest authenticationRequest) {
@@ -80,7 +79,7 @@ public class AuthService {
                 true
         );
 
-        if (userDAO.findByUsernameIgnoreCase(customUser.getUsername()).isPresent()) {
+        if (userRepository.findByUsernameIgnoreCase(customUser.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException("Username " + signupRequestDTO.username() + " is already taken");
         }
 

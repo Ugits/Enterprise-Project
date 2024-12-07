@@ -73,6 +73,7 @@ class AdminControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+
     @Test
     @WithMockUser(roles = "USER")
     void deleteUserWhenUserAuth() throws Exception {
