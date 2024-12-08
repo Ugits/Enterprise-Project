@@ -50,28 +50,21 @@ public class AppSecurityConfig {
 
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
-
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(restAuthenticationEntryPoint)
                         .accessDeniedHandler(restAccessDeniedHandler)
                 )
-
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .authenticationProvider(authenticationProvider())
-
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                 );
