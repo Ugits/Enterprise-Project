@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.spell.model;
+package org.jonas.enterpriseproject.spell.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;

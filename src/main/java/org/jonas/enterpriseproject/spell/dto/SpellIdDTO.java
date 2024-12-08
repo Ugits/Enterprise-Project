@@ -1,4 +1,4 @@
-package org.jonas.enterpriseproject.spell.model;
+package org.jonas.enterpriseproject.spell.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
